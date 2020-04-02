@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+#
+# Sources
+#   https://wiki.archlinux.org/index.php/Systemd/Timers
+#   https://mangolassi.it/topic/13455/systemd-timers-instead-of-cron
+
+[Unit]
+Description=Daily attempt to renew mail cert
+
+[Timer]
+# Wait 15min after boot
+OnBootSec=15min
+# OnCalendar=[DayOfWeek ][Year-Month-Day ][Hour:Minute[:Second]]
+OnCalendar=*-*-* 04:00
+# When activated, it triggers the service immediately if it missed the last start time
+Persistent=true
+
+[Install]
+WantedBy=timers.target

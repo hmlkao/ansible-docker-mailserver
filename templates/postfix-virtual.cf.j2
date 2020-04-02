@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+{% for account in mail_accounts %}
+{% for alias in account.aliases %}
+{{ alias }} {{ account.username }}@{{ account.domain }}
+{% endfor %}
+{% endfor %}

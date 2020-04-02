@@ -1,0 +1,25 @@
+---
+- name: Restart cert renew
+  become: yes
+  systemd:
+    daemon_reload: yes
+    name: mail-certs-renew.timer
+    state: restarted
+    enabled: yes
+
+- name: Restart mail service
+  docker_container:
+    name: mail-server
+    restart: yes
+
+- name: Show DKIM keys
+  debug:
+    msg: |
+      =========================================================================
+
+         Add this key to your DNS record for domain {{ item.item.path | dirname | basename }}
+            {{ item.content | b64decode }}
+
+      =========================================================================
+  with_items:
+    - "{{ dkimKeys.results }}"

@@ -1,0 +1,69 @@
+---
+# Why generate DKIM?
+#   https://support.google.com/a/answer/2466580
+# How to generate DKIM?
+#   https://github.com/tomav/docker-mailserver#generate-dkim-keys
+
+- name: Check certs directory
+  tags: [ config, dkim ]
+  stat:
+    path: "{{ mail_persist_folder }}/config/opendkim"
+  register: dkimIsGenerated
+
+- name: Generate DKIM key
+  tags: [ config, dkim ]
+  when: dkimIsGenerated.stat.exists == false
+  docker_container:
+    name: dkim-certs
+    image: "{{ mail_docker_image }}:{{ mail_docker_tag }}"
+    auto_remove: yes
+    volumes:
+      - "{{ mail_persist_folder }}/config/:/tmp/docker-mailserver"
+    command: "generate-dkim-config {{ mail_dkim_size | quote }}"
+  notify:
+    - Restart mail service
+  register: dkimGenerated
+
+- name: Lookup for DKIM key files
+  tags: [ config, dkim ]
+  # when: dkimGenerated.changed
+  find:
+    path:
+     - "{{ mail_persist_folder }}/config/opendkim/keys/"
+    recurse: yes
+    patterns:
+      - 'mail.txt'
+  register: dkimKeyFiles
+
+- name: Load DKIM keys
+  tags: [ config, dkim ]
+  # when: dkimGenerated.changed
+  slurp:
+    src: "{{ item.path }}"
+  register: dkimKeys
+  with_items:
+    - "{{ dkimKeyFiles.files }}"
+  notify:
+    - Show DKIM keys
+
+- name: Debug
+  tags: [ config, dkim ]
+  # when: dkimGenerated.changed
+  debug:
+    msg: "{{ item }}"
+  with_items:
+    - "{{ dkimKeys }}"
+
+- name: Show DKIM keys
+  tags: [ config, dkim ]
+  # when: dkimGenerated.changed
+  debug:
+    msg:
+      =========================================================================
+
+         Add this key to your DNS record for domain {{ item.item.path | dirname | basename }}
+            {{ item.content | b64decode }}
+
+      =========================================================================
+  with_items:
+    - "{{ dkimKeys.results }}"

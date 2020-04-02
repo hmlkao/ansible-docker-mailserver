@@ -1,0 +1,24 @@
+---
+# Create all needed persistent folders on host filesystem outside the container
+
+#######################################################
+#   PIP package docker have to be installed           #
+#     before Ansible docker_container module is used  #
+#######################################################
+- name: Install required Python packages
+  become: yes
+  pip:
+    name: docker
+
+- name: Create persistent storage folders
+  become: yes
+  file:
+    recurse: yes
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ mail_persist_folder }}/config"
+    - "{{ mail_persist_folder }}/maildata"
+    - "{{ mail_persist_folder }}/mailstate"
+    - "{{ mail_persist_folder }}/maillogs"
+    - "{{ mail_persist_folder }}/certs"

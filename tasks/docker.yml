@@ -1,0 +1,48 @@
+---
+- name: Check Docker binary
+  tags: [ mail ]
+  stat:
+    path: /usr/bin/docker
+  register: dockerBin
+
+- name: Ensure that Docker is installed
+  tags: [ mail ]
+  fail:
+    msg: "Is Docker installed?"
+  when: dockerBin.stat.exists == false
+
+- include_tasks: install-{{ ansible_os_family }}.yml
+  tags: [ mail ]
+
+- include_tasks: docker-init.yml
+  tags: [ mail ]
+
+- include_tasks: docker-certs.yml
+  tags: [ mail ]
+
+- name: Run Docker image
+  tags: [ mail ]
+  docker_container:
+    name: mail-server
+    restart_policy: unless-stopped
+    image: "{{ mail_docker_image }}:{{ mail_docker_tag }}"
+    volumes:
+      - "{{ mail_persist_folder }}/config:/tmp/docker-mailserver:ro"
+      - "{{ mail_persist_folder }}/maildata:/var/mail"
+      - "{{ mail_persist_folder }}/mailstate:/var/mail-state"
+      - "{{ mail_persist_folder }}/maillogs:/var/log/mail"
+      - "{{ mail_persist_folder }}/certs:/etc/letsencrypt:ro"
+    env:
+      SSL_TYPE: letsencrypt
+      TLS_LEVEL: modern
+      ONE_DIR: "1"
+      SPOOF_PROTECTION: "1"
+      POSTMASTER_ADDRESS: "{{ mail_cert_email }}"
+      OVERRIDE_HOSTNAME: "{{ mail_domains.0 }}"
+    published_ports:
+      - "25:25"
+      - "587:587"
+      - "993:993"
+    capabilities:
+      - NET_ADMIN
+      - SYS_PTRACE

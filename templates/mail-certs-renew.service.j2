@@ -1,0 +1,13 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Mail Cert renew
+After=docker.service
+
+[Service]
+ExecStartPre=/usr/bin/docker pull {{ mail_cert_image }}:{{ mail_cert_tag }}
+ExecStart=/usr/bin/docker run --rm \
+    -v /var/log/letsencrypt/:/var/log/letsencrypt/ \
+    -v {{ mail_persist_folder }}/certs/:/etc/letsencrypt/ \
+    -p 80:80 -p 443:443 \
+    {{ mail_cert_image }}:{{ mail_cert_tag }} renew

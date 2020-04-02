@@ -1,0 +1,55 @@
+---
+# - name: Ensure that Docker is installed
+
+- name: Check if mail certificates already exist
+  find:
+    file_type: any
+    paths:
+      - "{{ mail_persist_folder }}/certs"
+  register: certsFound
+
+- name: Generate certificates
+  when: certsFound.matched == 0
+  docker_container:
+    name: mail-cert-init
+    auto_remove: yes
+    image: certbot/certbot
+    volumes:
+      - /var/log/letsencrypt/:/var/log/letsencrypt/
+      - "{{ mail_persist_folder }}/certs/:/etc/letsencrypt/"
+    published_ports:
+      - "80:80"
+    command: "certonly --standalone -n --agree-tos --email \"{{ mail_cert_email }}\" -d {{ mail_domains | join(',') }}"
+  register: certGenerated
+
+- name: Check certs directory
+  when: certGenerated.changed
+  stat:
+    path: "{{ mail_persist_folder }}/certs/live"
+  register: certWasGenerated
+
+- name: Check if was certs generated well
+  fail:
+    msg: "Certificate was not generated! Points all configured domains to this server?"
+  when: certGenerated.changed and certWasGenerated.stats.exists == false
+
+- name: Create renew hook
+  when: certGenerated.changed
+  copy:
+    dest: "{{ mail_persist_folder }}/certs/renewal-hooks/post/restart-mail-server.sh"
+    content: |
+      #!/usr/bin/env bash
+      docker restart mail-server
+
+- name: Create systemd service
+  become: yes
+  template:
+    dest: /etc/systemd/system/mail-certs-renew.service
+    src: mail-certs-renew.service.j2
+  notify: Restart cert renew
+
+- name: Create systemd timer
+  template:
+    dest: /etc/systemd/system/mail-certs-renew.timer
+    src: mail-certs-renew.timer.j2
+  notify: Restart cert renew

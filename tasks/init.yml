@@ -1,0 +1,31 @@
+---
+- name: Check if all mandatory variables exist
+  assert:
+    that:
+      - mail_runtime == "docker"
+      - mail_docker_image == "tvial/docker-mailserver"
+      - mail_docker_tag|length > 0
+      - mail_domains|length > 0
+      - mail_persist_folder|length > 0
+      - mail_accounts|length > 0
+      - mail_cert_email|length > 0
+      - mail_cert_image == "certbot/certbot"
+      - mail_cert_tag|length > 0
+      - mail_dkim_size is regex("1024|2048|4096")
+
+- name: Check account variable
+  assert:
+    that:
+      - item.username|length > 0
+      - item.domain|length > 0
+      - item.password|length > 0
+  with_items:
+    - "{{ mail_accounts }}"
+
+- name: Check account.restrict
+  assert:
+    that:
+      - item.1 is regex("send|receive")
+  with_subelements:
+    - "{{ mail_accounts }}"
+    - "restrict"

@@ -1,0 +1,27 @@
+---
+# Mail accounts
+mail_accounts: []
+
+# FQDN of server which is used
+# Valid recursive DNS should exist for this FQDN
+# The first will be used as Common Name of certificate
+# Others will be used as SANs
+# All of them MUST be accessible via 80 and 443 and point to this server
+mail_domains: []
+
+# Email used to create Let's Encrypt account
+mail_cert_email: ""
+
+# Persistent storage on server for mail service
+mail_persist_folder: /opt/mail
+
+# Docker image used for deploy
+mail_docker_image: tvial/docker-mailserver
+mail_docker_tag: stable
+
+# Image used to generate Let's Encrypt certificates
+mail_cert_image: certbot/certbot
+mail_cert_tag: latest
+
+# Size of DKIM key
+mail_dkim_size: 2048

@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+{% for account in mail_accounts %}
+{% for restriction in account.restrict %}
+{% if restriction == "send" %}}
+{{ account.username }}@{{ account.domain }} REJECT
+{% endif %}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+{% for account in mail_accounts %}
+{{ account.username }}@{{ account.domain }}|{SHA512-CRYPT}{{ account.password | password_hash('sha512_crypt') }}
+{% endfor %}
