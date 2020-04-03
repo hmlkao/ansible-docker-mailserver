@@ -51,7 +51,7 @@ Quick Start
 ===========
 Install this Ansible role within the context of playbook
 ```
-ansible-galaxy install hmlka.docker-mailserver,0.1.0
+ansible-galaxy install hmlkao.docker_mailserver
 ```
 
 Then create your playbook yaml
@@ -59,7 +59,7 @@ Then create your playbook yaml
 - name: Localhost installation
   hosts: localhost
   roles:
-    - role: hmlkao.docker-mailserver
+    - role: hmlkao.docker_mailserver
   vars:
     mail_accounts:
       - username: user1
@@ -149,7 +149,7 @@ Then we can use this file in playbook
 - name: More complex installation
   hosts: server1.example.com
   roles:
-    - role: hmlkao.docker-mailserver
+    - role: hmlkao.docker_mailserver
   vars:
     mail_domains:
       - server1.example.com                 <-- my server
@@ -217,10 +217,9 @@ All data (mail data, certificates, configuration) are stored on the host in fold
 
 Certificates
 ------------
-https://github.com/tomav/docker-mailserver/wiki/Configure-SSL
-TLS certificates are issued by Let's Encrypt issuer by `certbot/certbot` Docker image.
+TLS certificates are issued by Let's Encrypt issuer by `certbot/certbot` Docker image according to [these instructions](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL).
 
-Ansible role creates `systemd` renew *service* and *timer* which will run the service once per day.
+Ansible role creates `systemd` renew *service* and *timer* which will run the service once per day. No cronjob configuration needed.
 
 Mail accounts
 -------------
@@ -233,8 +232,8 @@ You can see what happen in Docker logs on host
 docker logs mail-server
 ```
 
-**When you found some bug in role create issue on GitHub please.**
+**When you found some bug in the role create an [issue on GitHub(https://github.com/hmlkao/ansible-docker-mailserver/issues)] please.**
 
 Contributing
 ============
-All helping hands are appreciated. Check [CONTRIBUTING.md](CONTRIBUTING.md)
+All helping hands are appreciated. Check [CONTRIBUTING.md](https://github.com/hmlkao/ansible-docker-mailserver/blob/master/CONTRIBUTING.md)
