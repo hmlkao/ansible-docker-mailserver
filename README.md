@@ -126,7 +126,7 @@ Suppose that your server host is `server1.example.com`
 
 Test your configuration
 =======================
-There is many tools to test your mail servre, eg.:
+There is many tools to test your mail server, eg.:
   - https://mxtoolbox.com
     - Test your SMTP configuration
     - expecially [Deliverability test](https://mxtoolbox.com/deliverability) is useful (test SPF and DKIM)
@@ -137,7 +137,7 @@ There is many tools to test your mail servre, eg.:
 
 More complex example
 ====================
-First we would create file `host_vars/mail_accounts.yml` and encrypt it by `ansible-vault`
+First we would create file `host_vars/mail_accounts.yml` and encrypt it by [`ansible-vault`](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
 ```
 # ansible-vault edit host_vars/mail_accounts.yml
 mail_accounts:
@@ -181,23 +181,23 @@ Version: 3.28.5-0ubuntu0.18.04.1
 1. Edit > Accounts
 1. Add "Mail Account"
 1. Identity
-  1. Email Address: `user1@example.com`
+    - Email Address: `user1@example.com`
 1. Receiving Email
-  1. Server Type: IMAP
-  1. Server: `mail.example.com`
-  1. Username: `user1@example.com`
-  1. Encryption method: TLS on dedicated port
-    - Port should change to 993
-  1. Authentication: Password
-1. Sending Email
-  1. Server Type: SMTP
-  1. Server: `mail.example.com`
-  1. Port: 587
-  1. Check "Server requires authentication"
-  1. Encryption method: STARTTLS after connecting
-  1. Authentication:
-    - Type: Login
+    - Server Type: IMAP
+    - Server: `mail.example.com`
     - Username: `user1@example.com`
+    - Encryption method: TLS on dedicated port
+        - Port should change to 993
+    - Authentication: Password
+1. Sending Email
+    - Server Type: SMTP
+    - Server: `mail.example.com`
+    - Port: 587
+    - Check "Server requires authentication"
+    - Encryption method: STARTTLS after connecting
+    - Authentication:
+        - Type: Login
+        - Username: `user1@example.com`
 
 Gmail app for Android
 ---------------------
