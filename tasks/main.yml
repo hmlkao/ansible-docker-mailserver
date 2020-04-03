@@ -1,9 +1,9 @@
 ---
 - name: Check user input
-  include_tasks: "init.yml"
+  import_tasks: "init.yml"
   tags: [ always ]
 
-- include_tasks: "docker.yml"
+- import_tasks: "docker.yml"
   tags: [ install ]
 
 - name: Configure accounts
@@ -36,6 +36,6 @@
   notify: Restart mail service
 
 # MUST be run after accounts are configured
-- include_tasks: docker-dkim.yml
+- import_tasks: docker-dkim.yml
   tags: [ config, dkim ]
   # when: accounts.changed

@@ -11,16 +11,16 @@
     msg: "Docker is not installed or binary is not in $PATH"
   when: not dockerBin.stat.exists
 
-- include_tasks: install-{{ ansible_os_family }}.yml
+- import_tasks: install-{{ ansible_os_family }}.yml
   tags: [ mail ]
 
-- include_tasks: docker-init.yml
+- import_tasks: docker-init.yml
   tags: [ mail ]
 
-- include_tasks: docker-certs.yml
+- import_tasks: docker-certs.yml
   tags: [ mail ]
 
-- name: Run Docker image
+- name: Run Mailserver Docker image
   tags: [ mail ]
   docker_container:
     name: mail-server
