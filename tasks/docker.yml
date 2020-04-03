@@ -11,7 +11,8 @@
     msg: "Docker is not installed or binary is not in $PATH"
   when: not dockerBin.stat.exists
 
-- import_tasks: install-{{ ansible_os_family }}.yml
+- import_tasks: install-Debian.yml
+  when: ansible_os_family == 'Debian'
   tags: [ mail ]
 
 - import_tasks: docker-init.yml
