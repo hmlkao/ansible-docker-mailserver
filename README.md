@@ -1,6 +1,6 @@
 Ansible Docker mailserver
 =========================
-Ansible role is based on project [tomav/docker-mailserver](https://github.com/tomav/docker-mailserver).
+Ansible role is based on top of project [tomav/docker-mailserver](https://github.com/tomav/docker-mailserver).
 
 Role will create all needed prerequisites to run mail server in Docker but doesn't install the Docker itself.
 
@@ -159,22 +159,44 @@ Then we can use this file in playbook
 
 Client configuration
 ====================
-Suppose our mail server is running on domain `server1.example.com` and we have some pretty CNAME like `mail.example.com` which points to our mail server.
+Suppose your mail server is running on domain `server1.example.com` and we have some pretty CNAME like `mail.example.com` which points to our mail server and account with username `user1` is created.
 
 Evolution (Default Gnome client)
 --------------------------------
+Version: 3.28.5-0ubuntu0.18.04.1
+
 1. Edit > Accounts
 1. Add "Mail Account"
-1.
+1. Identity
+  1. Email Address: `user1@example.com`
+1. Receiving Email
+  1. Server Type: IMAP
+  1. Server: `mail.example.com`
+  1. Username: `user1@example.com`
+  1. Encryption method: TLS on dedicated port
+    - Port should change to 993
+  1. Authentication: Password
+1. Sending Email
+  1. Server Type: SMTP
+  1. Server: `mail.example.com`
+  1. Port: 587
+  1. Check "Server requires authentication"
+  1. Encryption method: STARTTLS after connecting
+  1. Authentication:
+    - Type: Login
+    - Username: `user1@example.com`
 
 Gmail app for Android
 ---------------------
+TBD
 
 Thunderbird (Mozilla client)
 ----------------------------
+TBD
 
 Mail (Default Windows 10 client)
 --------------------------------
+TBD
 
 Under the hood
 ==============
