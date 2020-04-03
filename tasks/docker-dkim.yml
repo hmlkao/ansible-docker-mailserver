@@ -12,7 +12,7 @@
 
 - name: Generate DKIM key
   tags: [ config, dkim ]
-  when: dkimIsGenerated.stat.exists == false
+  when: not dkimIsGenerated.stat.exists
   docker_container:
     name: dkim-certs
     image: "{{ mail_docker_image }}:{{ mail_docker_tag }}"

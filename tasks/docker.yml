@@ -8,8 +8,8 @@
 - name: Ensure that Docker is installed
   tags: [ mail ]
   fail:
-    msg: "Is Docker installed?"
-  when: dockerBin.stat.exists == false
+    msg: "Docker is not installed or binary is not in $PATH"
+  when: not dockerBin.stat.exists
 
 - include_tasks: install-{{ ansible_os_family }}.yml
   tags: [ mail ]

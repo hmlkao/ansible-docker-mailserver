@@ -31,7 +31,7 @@
 - name: Check if was certs generated well
   fail:
     msg: "Certificate was not generated! Points all configured domains to this server?"
-  when: certGenerated.changed and certWasGenerated.stats.exists == false
+  when: certGenerated.changed and not certWasGenerated.stats.exists
 
 - name: Create renew hook
   when: certGenerated.changed
