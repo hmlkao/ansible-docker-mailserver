@@ -41,11 +41,24 @@ Variables
 Mail account format
 ===================
 Each account in variable `mail_accounts` has these parameters:
-- **username** - part of email before "@", eg. `user1`
-- **domain** - part of email after "@", eg. `example.com`
-- **password** - user password in plaintext
-- **aliases** - list of aliases, each alias must be full email
-- **restrict** - list of restrictions, may be `send` for suppress mail sending or `receive` for suppress mail receiving
+- `username` - part of email before "@", eg. `user1`
+- `domain` - part of email after "@", eg. `example.com`
+- `password` - user password in plaintext
+- `aliases` - list of aliases, each alias must be full email
+- `restrict` - list of restrictions, may be `send` for suppress mail sending or `receive` for suppress mail receiving
+
+Example
+-------
+```
+mail_accounts:
+  - username: user1
+    domain: example.com
+    password: aaaaa
+    aliases:
+      - admin@example.com
+      - abuse@example.com
+    restrict: []
+```
 
 Quick Start
 ===========
