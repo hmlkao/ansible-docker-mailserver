@@ -33,7 +33,7 @@ Variables
 =========
 | Variable name         | Default     | Description
 | --------------------- | ----------- | --------------------------------------
-| `mail_accounts`       | `[]`        | List of mail accounts according to [Mail account format](#Mail_Account_format)
+| `mail_accounts`       | `[]`        | List of mail accounts according to [Mail account format](https://github.com/hmlkao/ansible-docker-mailserver#mail-account-format)
 | `mail_domains`        | `[]`        | List of mail domains (the first one should be your MX but certificate will be issued for all of them)
 | `mail_cert_email`     | `""`        | Email used for Let's Encrypt account
 | `mail_persist_folder` | `/opt/mail` | (optional) Persistent folder for mail data, configuration, etc.
