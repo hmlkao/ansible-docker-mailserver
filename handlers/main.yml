@@ -12,14 +12,10 @@
     name: mail-server
     restart: yes
 
-- name: Show DKIM keys
-  debug:
-    msg: |
-      =========================================================================
-
-         Add this key to your DNS record for domain {{ item.item.path | dirname | basename }}
-            {{ item.content | b64decode }}
-
-      =========================================================================
-  with_items:
-    - "{{ dkimKeys.results }}"
+- name: Create renew hook
+  copy:
+    dest: "{{ mail_persist_folder }}/certs/renewal-hooks/post/restart-mail-server.sh"
+    mode: 0755
+    content: |
+      #!/usr/bin/env bash
+      docker restart mail-server

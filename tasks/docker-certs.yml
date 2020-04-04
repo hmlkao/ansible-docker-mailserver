@@ -21,9 +21,11 @@
       - "80:80"
     command: "certonly --standalone -n --agree-tos --email \"{{ mail_cert_email }}\" -d {{ mail_domains | join(',') }}"
   register: certGenerated
+  notify:
+    - Create renew hook
 
 - name: Check certs directory
-  when: certGenerated.changed
+  when: certGenerated.changed # noqa 503
   stat:
     path: "{{ mail_persist_folder }}/certs/live"
   register: certWasGenerated
@@ -31,15 +33,7 @@
 - name: Check if was certs generated well
   fail:
     msg: "Certificate was not generated! Points all configured domains to this server?"
-  when: certGenerated.changed and not certWasGenerated.stats.exists
-
-- name: Create renew hook
-  when: certGenerated.changed
-  copy:
-    dest: "{{ mail_persist_folder }}/certs/renewal-hooks/post/restart-mail-server.sh"
-    content: |
-      #!/usr/bin/env bash
-      docker restart mail-server
+  when: certGenerated.changed and not certWasGenerated.stats.exists # noqa 503
 
 - name: Create systemd service
   become: yes
