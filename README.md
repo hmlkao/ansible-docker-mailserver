@@ -107,15 +107,20 @@ Suppose that your server host is `server1.example.com`
     ```
 1. Add TXT record with DKIM to your DNS
     - You can find DKIM key in folder defined by `mail_persist_folder` variable in file `config/opendkim/keys/<domain.tld>/mail.txt` on your host (server)
+      - Beware of that the record is divided by 250 characters so you have to [concat it together](https://github.com/tomav/docker-mailserver/wiki/Configure-DKIM#configuration-using-a-web-interface)
     - TXT record should look something like
       ```
       mail._domainkey IN     TXT     "v=DKIM1; h=sha256; k=rsa; p=MIIB...jwfx"
       ```
-      There should be really `mail._domainkey` for all, NO `server1._domainkey` or whatever else
-1. Add TXT record with DMARC to your DNS
+      - `mail` is DKIM selector, not subdomain so there have to be `mail._domainkey` for all, NO `server1._domainkey` or whatever else
+      - Custom selector [cannot be used](https://github.com/tomav/docker-mailserver/issues/1304).
+1. Add TXT record with [DMARC](https://dmarc.org/) to your DNS
+    What happen with mails which doesn't meet SFP and DKIM validation.
     ```
-    _DMARC IN     TXT     "v=DMARC1; p=quarantine; pct=5; rua=mailto:abuse@example.com; ruf=mailto:abuse@example.com; fo=1"
+    _DMARC IN     TXT     "v=DMARC1; p=quarantine; pct=5; rua=mailto:abuse+rua@example.com; ruf=mailto:abuse+ruf@example.com; fo=1"
     ```
+    - `ruf` - Reporting URI for forensic reports
+    - `rua` - Reporting URI of aggregate reports
 1. Configure reverse DNS for host public IP
     - Ask your provider to configure reverse DNS
     - You should get something similar
@@ -127,13 +132,19 @@ Suppose that your server host is `server1.example.com`
 Test your configuration
 =======================
 There is many tools to test your mail server, eg.:
-  - https://mxtoolbox.com
-    - Test your SMTP configuration
-    - expecially [Deliverability test](https://mxtoolbox.com/deliverability) is useful (test SPF and DKIM)
-  - https://www.checktls.com
-    - Test connection to your SMTP port
-    - Fill your `domain.tld` (eg. example.com) to the field
-  - [OpenSSL test](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL#testing-certificate)
+- https://dkimvalidator.com
+  - Generate email address which you can use to verify your SPF/DKIM config
+- check-auth@verifier.port25.com
+  - Just send mail to this mail address from your account mail and your will receive report back to your mail address
+- https://mxtoolbox.com
+  - Test your SMTP configuration
+  - Especially [Deliverability test](https://mxtoolbox.com/deliverability) is useful (test SPF and DKIM)
+  - Just send mail to ping@tools.mxtoolbox.com from your account mail and your will receive report back to your mail address
+  - NOTE: MXToolBox DKIM validation fails (eg. [tomav/docker-mailserver](https://github.com/tomav/docker-mailserver/issues/1172), [serverfault.com](https://serverfault.com/questions/1005818/dkim-validating-but-mxtoolbox-reports-as-dkim-signature-not-verified) even if another validators works well, don't know why but it looks that Google DKIM validation fails too (just send mail to any Gmail adrress and you will get report to mail according to your [DMARC configuration](https://github.com/hmlkao/ansible-docker-mailserver#what-next))
+- https://www.checktls.com
+  - Test connection to your SMTP port
+  - Fill your `domain.tld` (eg. `example.com`) to the field
+- Test via [OpenSSL](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL#testing-certificate)
 
 More complex example
 ====================
@@ -245,8 +256,13 @@ You can see what happen in Docker logs on host
 docker logs mail-server
 ```
 
-**When you found some bug in the role create an [issue on GitHub(https://github.com/hmlkao/ansible-docker-mailserver/issues)] please.**
+**When you found some bug in the role create an [issue on GitHub](https://github.com/hmlkao/ansible-docker-mailserver/issues) please.**
 
 Contributing
 ============
 All helping hands are appreciated. Check [CONTRIBUTING.md](https://github.com/hmlkao/ansible-docker-mailserver/blob/master/CONTRIBUTING.md)
+
+Sources
+=======
+- [RSA sign and verify using Openssl : Behind the scene](https://medium.com/@bn121rajesh/rsa-sign-and-verify-using-openssl-behind-the-scene-bf3cac0aade2)
+  - Interesting article about how RSA signing (used by DKIM) works
