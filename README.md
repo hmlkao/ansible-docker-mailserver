@@ -10,6 +10,7 @@ Currently supported
 -------------------
 - Account management
   - [x] Multiple accounts
+  - [ ] Multiple domains
   - [ ] LDAP
 - Let's Encrypt Key renew automation
   - [x] Standalone
@@ -34,7 +35,7 @@ Variables
 | Variable name         | Default     | Description
 | --------------------- | ----------- | --------------------------------------
 | `mail_accounts`       | `[]`        | List of mail accounts according to [Mail account format](https://github.com/hmlkao/ansible-docker-mailserver#mail-account-format)
-| `mail_domains`        | `[]`        | List of mail domains (the first one should be your MX but certificate will be issued for all of them)
+| `mail_domains`        | `[]`        | List of mail domains (the first one should be your MX however certificate will be issued for all of them)
 | `mail_cert_email`     | `""`        | Email used for Let's Encrypt account
 | `mail_persist_folder` | `/opt/mail` | (optional) Persistent folder for mail data, configuration, etc.
 
@@ -69,6 +70,7 @@ ansible-galaxy install hmlkao.docker_mailserver
 
 Then create your playbook yaml
 ```
+---
 - name: Localhost installation
   hosts: localhost
   roles:
@@ -148,38 +150,49 @@ There is many tools to test your mail server, eg.:
 
 More complex example
 ====================
-First we would create file `host_vars/mail_accounts.yml` and encrypt it by [`ansible-vault`](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
-```
-# ansible-vault edit host_vars/mail_accounts.yml
-mail_accounts:
-  - username: user1
-    domain: example.com
-    password: aaaaa
-    aliases:
-      - admin@example.com
-      - abuse@example.com
-    restrict: []
-  - username: no-reply
-    domain: example.com
-    password: bbbbb
-    aliases: []
-    restrict:
-      - receive
-```
-
-Then we can use this file in playbook
-
-```
-- name: More complex installation
-  hosts: server1.example.com
-  roles:
-    - role: hmlkao.docker_mailserver
-  vars:
-    mail_domains:
-      - server1.example.com                 <-- my server
-      - mail.example.com                    <-- pretty name for connection from clients
-    mail_cert_email: my-mail@somewhere.com  <-- notification mail for Let's Encrypt
-```
+1. Create file `host_vars/server1.example.com.yml` encrypted by [`ansible-vault`](https://docs.ansible.com/ansible/latest/user_guide/vault.html) first.
+    ```
+    # ansible-vault edit host_vars/server1.example.com.yml
+    mail_accounts:
+      - username: user1
+        domain: example.com
+        password: aaaaa
+        aliases:
+          - admin@example.com
+          - abuse@example.com
+        restrict: []
+      - username: no-reply
+        domain: example.com
+        password: bbbbb
+        aliases: []
+        restrict:
+          - receive
+    ```
+1. Create file `vault-pass.txt` with your Ansible Vault (add this file to `.gitignore`)
+    ```
+    # echo 'my-secret-vault-password' > vault-pass.txt
+    ```
+1. Set up Ansible with ansible.cfg
+    ```
+    # cat > ansible.cfg <<EOF
+    [defaults]
+    vault_password_file = vault-pass.txt
+    EOF
+    ```
+1. Variable `mail_accounts` is then available in the role for host `server1.example.com`.
+    ```
+    ---
+    - name: More complex installation
+      hosts: server1.example.com
+      roles:
+        - role: hmlkao.docker_mailserver
+      vars:
+        mail_domains:
+          - server1.example.com                 <-- my MX server
+          - mail.example.com                    <-- pretty name for email clients
+        mail_cert_email: my-mail@somewhere.com  <-- notification mail for Let's Encrypt
+        mail_persist_folder: /usr/local/mail    <-- path to folder on your host
+    ```
 
 Client configuration
 ====================
@@ -212,7 +225,19 @@ Version: 3.28.5-0ubuntu0.18.04.1
 
 Gmail app for Android
 ---------------------
-TBD
+Version: 2020.03.01.300951155.release
+
+1. Add another account
+1. Other
+1. Fill your email > Manual setup
+1. What type of account is this?: Personal (IMAP)
+1. Fill your password > Next
+1. Server: `mail.example.com`
+1. IMAP port: 465 (SSL/TLS)
+1. Outgoing server
+    - Server: `mail.example.com`
+
+You would be able to receive/send mails now.
 
 Thunderbird (Mozilla client)
 ----------------------------
@@ -243,11 +268,11 @@ Certificates
 ------------
 TLS certificates are issued by Let's Encrypt issuer by `certbot/certbot` Docker image according to [these instructions](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL).
 
-Ansible role creates `systemd` renew *service* and *timer* which will run the service once per day. No cronjob configuration needed.
+This role creates `systemd` renew *service* and *timer* which will run the service once per day. No cronjob configuration needed.
 
 Mail accounts
 -------------
-They are generated simply to file according to [these instructions](https://github.com/tomav/docker-mailserver/wiki/Configure-Accounts).
+They are generated directly to file `postfix-accounts.cf` according to [these instructions](https://github.com/tomav/docker-mailserver/wiki/Configure-Accounts).
 
 Troubleshooting
 ===============
