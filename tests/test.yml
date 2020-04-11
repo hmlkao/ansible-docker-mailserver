@@ -2,7 +2,7 @@
 - name: Localhost installation
   hosts: localhost
   roles:
-    - role: hmlkao.docker_mailserver
+    - role: ansible-docker-mailserver
   vars:
     mail_accounts:
       - username: user1
