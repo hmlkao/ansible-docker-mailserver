@@ -125,9 +125,9 @@ Suppose that your server host is `server1.example.com`
     - `rua` - Reporting URI of aggregate reports
 1. Configure reverse DNS for host public IP
     - Ask your provider to configure reverse DNS
-    - You should get something similar
+    - You should get something similar (where `<1.2.3.4>` is your public server IP)
       ```
-      # dig -x 1.2.3.4 +short
+      # dig -x <1.2.3.4> +short
       server1.example.com.
       ```
 
