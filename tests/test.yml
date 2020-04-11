@@ -1,0 +1,23 @@
+---
+- name: Localhost installation
+  hosts: localhost
+  roles:
+    - role: hmlkao.docker_mailserver
+  vars:
+    mail_accounts:
+      - username: user1
+        domain: example.com
+        password: aaaaa
+        aliases:
+          - admin@example.com
+          - abuse@example.com
+        restrict: []
+      - username: no-reply
+        domain: example.com
+        password: bbbbb
+        aliases: []
+        restrict:
+          - receive
+    mail_domains:
+      - server1.example.com
+    mail_cert_email: my-mail@somewhere.com
