@@ -205,23 +205,23 @@ Version: 3.28.5-0ubuntu0.18.04.1
 1. Edit > Accounts
 1. Add "Mail Account"
 1. Identity
-    - Email Address: `user1@example.com`
+  - Email Address: `user1@example.com`
 1. Receiving Email
-    - Server Type: IMAP
-    - Server: `mail.example.com`
-    - Username: `user1@example.com`
-    - Encryption method: TLS on dedicated port
-        - Port should change to 993
-    - Authentication: Password
+  - Server Type: IMAP
+  - Server: `mail.example.com`
+  - Username: `user1@example.com`
+  - Encryption method: TLS on dedicated port
+    - Port should change to 993
+  - Authentication: Password
 1. Sending Email
-    - Server Type: SMTP
-    - Server: `mail.example.com`
-    - Port: 587
-    - Check "Server requires authentication"
-    - Encryption method: STARTTLS after connecting
-    - Authentication:
-        - Type: Login
-        - Username: `user1@example.com`
+  - Server Type: SMTP
+  - Server: `mail.example.com`
+  - Port: 587
+  - Check "Server requires authentication"
+  - Encryption method: STARTTLS after connecting
+  - Authentication:
+    - Type: Login
+    - Username: `user1@example.com`
 
 Gmail app for Android
 ---------------------
@@ -235,7 +235,7 @@ Version: 2020.03.01.300951155.release
 1. Server: `mail.example.com`
 1. IMAP port: 465 (SSL/TLS)
 1. Outgoing server
-    - Server: `mail.example.com`
+  - Server: `mail.example.com`
 
 You would be able to receive/send mails now.
 
