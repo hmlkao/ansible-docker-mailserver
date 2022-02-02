@@ -47,10 +47,6 @@ galaxy_info:
     versions:
     - bionic
     - focal
-  - name: macOS
-    versions:
-    - Big-Sur
-    - Monterey
 
   galaxy_tags:
     # List tags for your role here, one per line. A tag is a keyword that describes
