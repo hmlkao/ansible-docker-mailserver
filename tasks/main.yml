@@ -11,6 +11,7 @@
   template:
     dest: "{{ mail_persist_folder }}/config/postfix-accounts.cf"
     src: postfix-accounts.cf.j2
+    mode: 0600
   register: accounts
   notify: Restart mail service
 
@@ -19,6 +20,7 @@
   template:
     dest: "{{ mail_persist_folder }}/config/postfix-virtual.cf"
     src: postfix-virtual.cf.j2
+    mode: 0600
   notify: Restart mail service
 
 - name: Configure send restrictions
@@ -26,6 +28,7 @@
   template:
     dest: "{{ mail_persist_folder }}/config/postfix-send-access.cf"
     src: postfix-send-access.cf.j2
+    mode: 0600
   notify: Restart mail service
 
 - name: Configure receive restrictions
@@ -33,6 +36,7 @@
   template:
     dest: "{{ mail_persist_folder }}/config/postfix-receive-access.cf"
     src: postfix-receive-access.cf.j2
+    mode: 0600
   notify: Restart mail service
 
 # MUST be run after accounts are configured

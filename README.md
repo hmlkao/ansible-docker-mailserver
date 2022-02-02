@@ -1,6 +1,6 @@
 Ansible Docker mailserver
 =========================
-Ansible role is based on top of project [tomav/docker-mailserver](https://github.com/tomav/docker-mailserver).
+Ansible role is based on top of project [docker-mailserver/docker-mailserver](https://github.com/docker-mailserver/docker-mailserver).
 
 Role will create all needed prerequisites to run mail server in Docker but doesn't install the Docker itself.
 
@@ -14,7 +14,7 @@ Currently supported
   - [ ] LDAP
 - Let's Encrypt Key renew automation
   - [x] Standalone
-  - [ ] [Nginx Proxy](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL#example-using-docker-nginx-proxy-and-letsencrypt-nginx-proxy-companion)
+  - [ ] [Nginx Proxy](https://docker-mailserver.github.io/docker-mailserver/edge/config/security/ssl/#example-using-nginx-proxy-and-acme-companion-with-docker)
 - Host OS support
   - [x] Debian based
   - [ ] Red Hat based
@@ -109,15 +109,15 @@ Suppose that your server host is `server1.example.com`
     ```
 1. Add TXT record with DKIM to your DNS
     - You can find DKIM key in folder defined by `mail_persist_folder` variable in file `config/opendkim/keys/<domain.tld>/mail.txt` on your host (server)
-      - Beware of that the record is divided by 250 characters so you have to [concat it together](https://github.com/tomav/docker-mailserver/wiki/Configure-DKIM#configuration-using-a-web-interface)
+      - Beware of that the record is divided by 250 characters so you have to [concat it together](https://docker-mailserver.github.io/docker-mailserver/edge/config/best-practices/dkim/#configuration-using-a-web-interface)
     - TXT record should look something like
       ```
       mail._domainkey IN     TXT     "v=DKIM1; h=sha256; k=rsa; p=MIIB...jwfx"
       ```
       - `mail` is DKIM selector, not subdomain so there have to be `mail._domainkey` for all, NO `server1._domainkey` or whatever else
-      - Custom selector [cannot be used](https://github.com/tomav/docker-mailserver/issues/1304).
+      - Custom selector [cannot be used](https://github.com/docker-mailserver/docker-mailserver/issues/1304).
 1. Add TXT record with [DMARC](https://dmarc.org/) to your DNS
-    What happen with mails which doesn't meet SFP and DKIM validation.
+    What happen with mails which doesn't meet SPF and DKIM validation.
     ```
     _DMARC IN     TXT     "v=DMARC1; p=quarantine; pct=5; rua=mailto:abuse+rua@example.com; ruf=mailto:abuse+ruf@example.com; fo=1"
     ```
@@ -142,11 +142,11 @@ There is many tools to test your mail server, eg.:
   - Test your SMTP configuration
   - Especially [Deliverability test](https://mxtoolbox.com/deliverability) is useful (test SPF and DKIM)
   - Just send mail to ping@tools.mxtoolbox.com from your account mail and your will receive report back to your mail address
-  - NOTE: MXToolBox DKIM validation fails (eg. [tomav/docker-mailserver](https://github.com/tomav/docker-mailserver/issues/1172), [serverfault.com](https://serverfault.com/questions/1005818/dkim-validating-but-mxtoolbox-reports-as-dkim-signature-not-verified) even if another validators works well, don't know why but it looks that Google DKIM validation fails too (just send mail to any Gmail adrress and you will get report to mail according to your [DMARC configuration](https://github.com/hmlkao/ansible-docker-mailserver#what-next))
+  - NOTE: MXToolBox DKIM validation fails (eg. [docker-mailserver/docker-mailserver](https://github.com/docker-mailserver/docker-mailserver/issues/1172), [serverfault.com](https://serverfault.com/questions/1005818/dkim-validating-but-mxtoolbox-reports-as-dkim-signature-not-verified) even if another validators works well, don't know why but it looks that Google DKIM validation fails too (just send mail to any Gmail adrress and you will get report to mail according to your [DMARC configuration](https://github.com/hmlkao/ansible-docker-mailserver#what-next))
 - https://www.checktls.com
   - Test connection to your SMTP port
   - Fill your `domain.tld` (eg. `example.com`) to the field
-- Test via [OpenSSL](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL#testing-certificate)
+- Test via [OpenSSL](https://docker-mailserver.github.io/docker-mailserver/edge/config/security/ssl/#testing-a-certificate-is-valid)
 
 More complex example
 ====================
@@ -266,13 +266,13 @@ All data (mail data, certificates, configuration) are stored on the host in fold
 
 Certificates
 ------------
-TLS certificates are issued by Let's Encrypt issuer by `certbot/certbot` Docker image according to [these instructions](https://github.com/tomav/docker-mailserver/wiki/Configure-SSL).
+TLS certificates are issued by Let's Encrypt issuer by `certbot/certbot` Docker image according to [these instructions](https://docker-mailserver.github.io/docker-mailserver/edge/config/security/ssl/#example-using-docker-for-lets-encrypt).
 
 This role creates `systemd` renew *service* and *timer* which will run the service once per day. No cronjob configuration needed.
 
 Mail accounts
 -------------
-They are generated directly to file `postfix-accounts.cf` according to [these instructions](https://github.com/tomav/docker-mailserver/wiki/Configure-Accounts).
+They are generated directly to file `postfix-accounts.cf` according to [these instructions](https://docker-mailserver.github.io/docker-mailserver/edge/config/user-management/accounts/).
 
 Troubleshooting
 ===============

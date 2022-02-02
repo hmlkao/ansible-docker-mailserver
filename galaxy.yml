@@ -1,0 +1,30 @@
+namespace: hmlkao
+name: docker_mailserver
+version: 2.0.0
+readme: README.md
+
+authors:
+- Ondrej Homolka <ondrej.homolka(at)gmail.com>
+
+description: Ansible role for as simple as possible deploy of docker-mailserver/docker-mailserver.
+
+license_file: 'LICENSE'
+
+tags:
+  - docker
+  - dovecot
+  - email
+  - imap
+  - mail
+  - smtp
+
+dependencies: {}
+
+# The URL of the originating SCM repository
+repository: https://github.com/hmlkao/ansible-docker-mailserver
+# The URL to any online docs
+documentation: https://github.com/hmlkao/ansible-docker-mailserver
+# The URL to the homepage of the collection/project
+homepage: https://github.com/hmlkao/ansible-docker-mailserver
+# The URL to the collection issue tracker
+issues: https://github.com/hmlkao/ansible-docker-mailserver/issues

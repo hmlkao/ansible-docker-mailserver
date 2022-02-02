@@ -2,23 +2,23 @@
 # Why generate DKIM?
 #   https://support.google.com/a/answer/2466580
 # How to generate DKIM?
-#   https://github.com/tomav/docker-mailserver#generate-dkim-keys
+#   https://docker-mailserver.github.io/docker-mailserver/edge/config/best-practices/dkim/
 
 - name: Check certs directory
   tags: [ config, dkim ]
   stat:
     path: "{{ mail_persist_folder }}/config/opendkim"
-  register: dkimIsGenerated
+  register: dkim_is_generated
 
 - name: Generate DKIM key
   tags: [ config, dkim ]
-  when: not dkimIsGenerated.stat.exists
+  when: not dkim_is_generated.stat.exists
   docker_container:
     name: dkim-certs
     image: "{{ mail_docker_image }}:{{ mail_docker_tag }}"
     auto_remove: yes
     volumes:
       - "{{ mail_persist_folder }}/config/:/tmp/docker-mailserver"
-    command: "generate-dkim-config {{ mail_dkim_size | quote }}"
+    command: "open-dkim keysize {{ mail_dkim_size | quote }}"
   notify:
     - Restart mail service

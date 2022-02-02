@@ -3,13 +3,13 @@
   tags: [ mail ]
   stat:
     path: /usr/bin/docker
-  register: dockerBin
+  register: docker_bin
 
 - name: Ensure that Docker is installed
   tags: [ mail ]
   fail:
     msg: "Docker is not installed or binary is not in $PATH"
-  when: not dockerBin.stat.exists
+  when: not docker_bin.stat.exists
 
 - import_tasks: install-Debian.yml
   when: ansible_os_family == 'Debian'

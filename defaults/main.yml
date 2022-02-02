@@ -16,12 +16,12 @@ mail_cert_email: ""
 mail_persist_folder: /opt/mail
 
 # Docker image used for deploy
-mail_docker_image: tvial/docker-mailserver
-mail_docker_tag: stable
+mail_docker_image: docker.io/mailserver/docker-mailserver
+mail_docker_tag: latest
 
 # Image used to generate Let's Encrypt certificates
 mail_cert_image: certbot/certbot
 mail_cert_tag: latest
 
 # Size of DKIM key
-mail_dkim_size: 2048
+mail_dkim_size: 4096
