@@ -6,10 +6,10 @@
     file_type: any
     paths:
       - "{{ mail_persist_folder }}/certs"
-  register: certsFound
+  register: certs_found
 
 - name: Generate certificates
-  when: certsFound.matched == 0
+  when: certs_found.matched == 0
   docker_container:
     name: mail-cert-init
     auto_remove: yes
@@ -20,30 +20,32 @@
     published_ports:
       - "80:80"
     command: "certonly --standalone -n --agree-tos --email \"{{ mail_cert_email }}\" -d {{ mail_domains | join(',') }}"
-  register: certGenerated
+  register: cert_generated
   notify:
     - Create renew hook
 
 - name: Check certs directory
-  when: certGenerated.changed # noqa 503
+  when: cert_generated.changed # noqa 503
   stat:
     path: "{{ mail_persist_folder }}/certs/live"
-  register: certWasGenerated
+  register: cert_was_generated
 
 - name: Check if was certs generated well
   fail:
     msg: "Certificate was not generated! Points all configured domains to this server?"
-  when: certGenerated.changed and not certWasGenerated.stats.exists # noqa 503
+  when: cert_generated.changed and not cert_was_generated.stats.exists # noqa 503
 
 - name: Create systemd service
-  become: yes
+  become: true
   template:
     dest: /etc/systemd/system/mail-certs-renew.service
     src: mail-certs-renew.service.j2
+    mode: 0644
   notify: Restart cert renew
 
 - name: Create systemd timer
   template:
     dest: /etc/systemd/system/mail-certs-renew.timer
     src: mail-certs-renew.timer.j2
+    mode: 0644
   notify: Restart cert renew

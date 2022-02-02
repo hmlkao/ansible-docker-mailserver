@@ -1,5 +1,6 @@
 ---
 - name: Install required packages
+  become: true
   apt:
     name:
       - python3-pip

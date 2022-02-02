@@ -6,12 +6,12 @@
 #     before Ansible docker_container module is used  #
 #######################################################
 - name: Install required Python packages
-  become: yes
+  become: true
   pip:
     name: docker
 
 - name: Create persistent storage folders
-  become: yes
+  become: true
   file:
     recurse: yes
     path: "{{ item }}"

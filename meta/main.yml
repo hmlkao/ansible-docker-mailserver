@@ -1,7 +1,7 @@
 galaxy_info:
-  role_name: docker-mailserver
+  role_name: docker_mailserver
   author: hmlkao
-  description: Ansible role for as simple as possible deploy of tomav/docker-mailserver.
+  description: Ansible role for as simple as possible deploy of docker-mailserver/docker-mailserver.
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
@@ -45,7 +45,12 @@ galaxy_info:
   #   - 99.99
   - name: Ubuntu
     versions:
-      - bionic
+    - bionic
+    - focal
+  - name: macOS
+    versions:
+    - Big-Sur
+    - Monterey
 
   galaxy_tags:
     # List tags for your role here, one per line. A tag is a keyword that describes

@@ -2,7 +2,7 @@
 - name: Check if all mandatory variables exist
   assert:
     that:
-      - mail_docker_image == "tvial/docker-mailserver"
+      - mail_docker_image|length > 0
       - mail_docker_tag|length > 0
       - mail_domains|length > 0
       - mail_persist_folder|length > 0
