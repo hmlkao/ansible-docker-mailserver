@@ -37,7 +37,11 @@ Variables
 | `mail_accounts`       | `[]`        | List of mail accounts according to [Mail account format](https://github.com/hmlkao/ansible-docker-mailserver#mail-account-format)
 | `mail_domains`        | `[]`        | List of mail domains (the first one should be your MX however certificate will be issued for all of them)
 | `mail_cert_email`     | `""`        | Email used for Let's Encrypt account
-| `mail_persist_folder` | `/opt/mail` | (optional) Persistent folder for mail data, configuration, etc.
+| `mail_persist_folder` | `/opt/mail` | (optional) Persistent folder for mail data, configuration, etc. on host
+| `mail_docker_image`   | `docker.io/mailserver/docker-mailserver` | (optional) Shouldn't be changed
+| `mail_docker_tag`     | `latest`    | (optional) Image Docker tag used to run mail server
+| `mail_dkim_size`      | `4096`      | (optional) DKIM key size (available values are 1024, 2048, 4096)
+| `mail_amavis_config`  | `""`        | (optional) Configure Amavis overrides
 
 Mail account format
 ===================
@@ -143,9 +147,12 @@ There is many tools to test your mail server, eg.:
   - Especially [Deliverability test](https://mxtoolbox.com/deliverability) is useful (test SPF and DKIM)
   - Just send mail to ping@tools.mxtoolbox.com from your account mail and your will receive report back to your mail address
   - NOTE: MXToolBox DKIM validation fails (eg. [docker-mailserver/docker-mailserver](https://github.com/docker-mailserver/docker-mailserver/issues/1172), [serverfault.com](https://serverfault.com/questions/1005818/dkim-validating-but-mxtoolbox-reports-as-dkim-signature-not-verified) even if another validators works well, don't know why but it looks that Google DKIM validation fails too (just send mail to any Gmail adrress and you will get report to mail according to your [DMARC configuration](https://github.com/hmlkao/ansible-docker-mailserver#what-next))
-- https://www.checktls.com
+- [checktls.com](https://www.checktls.com/TestReceiver)
   - Test connection to your SMTP port
   - Fill your `domain.tld` (eg. `example.com`) to the field
+- [Google Postmaster tools](https://toolbox.googleapps.com/apps/checkmx/)
+  - Fill your `domain.tld` (eg. `example.com`) to the domain field
+  - Fill `mail` to DKIM selector field
 - Test via [OpenSSL](https://docker-mailserver.github.io/docker-mailserver/edge/config/security/ssl/#testing-a-certificate-is-valid)
 
 More complex example
@@ -239,6 +246,20 @@ Version: 2020.03.01.300951155.release
 
 You would be able to receive/send mails now.
 
+Mail (Default MacOS client)
+---------------------------
+Version: 15.0 (3693.40.0.1.81) / 2022-02-14
+
+1. Choose a Mail account provider... > Other Mail Account...
+1. Fill
+    * Name: < your name >
+    * Email address: < the whole email address >
+    * Password: < password to your mail account >
+1. When is error message shown
+    * Choose "IMAP"
+    * Fill address of your mail server > according to MX record
+1. Sign in
+
 Thunderbird (Mozilla client)
 ----------------------------
 TBD
@@ -283,11 +304,11 @@ docker logs mail-server
 
 **When you found some bug in the role create an [issue on GitHub](https://github.com/hmlkao/ansible-docker-mailserver/issues) please.**
 
-Contributing
-============
-All helping hands are appreciated. Check [CONTRIBUTING.md](https://github.com/hmlkao/ansible-docker-mailserver/blob/master/CONTRIBUTING.md)
-
 Sources
 =======
 - [RSA sign and verify using Openssl : Behind the scene](https://medium.com/@bn121rajesh/rsa-sign-and-verify-using-openssl-behind-the-scene-bf3cac0aade2)
   - Interesting article about how RSA signing (used by DKIM) works
+
+Contributing
+============
+All helping hands are appreciated. Check [CONTRIBUTING.md](https://github.com/hmlkao/ansible-docker-mailserver/blob/master/CONTRIBUTING.md)

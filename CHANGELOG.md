@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2022-02-11
+### Added
+- Variable `mail_amavis_config` to configure Amavis
+### Changed
+- Order of Docker instalation and config generation
+
 ## [2.0.0] - 2022-02-02
 ### Added
 - `galaxy.yml` file to provide more metadata for Ansible Galaxy

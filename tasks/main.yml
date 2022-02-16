@@ -3,8 +3,8 @@
   import_tasks: "init.yml"
   tags: [ always ]
 
-- import_tasks: "docker.yml"
-  tags: [ install ]
+- import_tasks: docker-init.yml
+  tags: [ always ]
 
 - name: Configure accounts
   tags: [ config ]
@@ -38,6 +38,18 @@
     src: postfix-receive-access.cf.j2
     mode: 0600
   notify: Restart mail service
+
+- name: Configure custom Amavis settings
+  tags: [ config ]
+  template:
+    dest: "{{ mail_persist_folder }}/amavis/custom-config.conf"
+    src: amavis-custom-config.conf.j2
+    mode: 0600
+  notify: Restart mail service
+
+- name: Run docker container
+  import_tasks: "docker.yml"
+  tags: [ install ]
 
 # MUST be run after accounts are configured
 - import_tasks: docker-dkim.yml

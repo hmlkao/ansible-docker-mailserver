@@ -25,3 +25,10 @@ mail_cert_tag: latest
 
 # Size of DKIM key
 mail_dkim_size: 4096
+
+# Amavis custom config
+# Can happen that client who want to send mail, eg. NAS box, phototrap, etc. is sending wrong headers
+#   Than you can disable this check in Amavis by this configuration
+#mail_amavis_config: |+
+#  $allowed_header_tests{'missing'} = 0;
+mail_amavis_config: ""
