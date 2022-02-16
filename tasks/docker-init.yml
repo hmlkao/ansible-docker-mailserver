@@ -22,3 +22,4 @@
     - "{{ mail_persist_folder }}/mailstate"
     - "{{ mail_persist_folder }}/maillogs"
     - "{{ mail_persist_folder }}/certs"
+    - "{{ mail_persist_folder }}/amavis"

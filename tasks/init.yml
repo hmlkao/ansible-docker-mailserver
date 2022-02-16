@@ -14,6 +14,8 @@
 
 - name: Check account variable
   assert:
+    # TODO: Disable verbose output to avoid show of sensitive data to output
+    quiet: yes
     that:
       - item.username|length > 0
       - item.domain|length > 0
@@ -23,6 +25,8 @@
 
 - name: Check account.restrict
   assert:
+    # TODO: Disable verbose output to avoid show of sensitive data to output
+    quiet: yes
     that:
       - item.1 is regex("send|receive")
   with_subelements:

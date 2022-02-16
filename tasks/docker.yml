@@ -15,9 +15,6 @@
   when: ansible_os_family == 'Debian'
   tags: [ mail ]
 
-- import_tasks: docker-init.yml
-  tags: [ mail ]
-
 - import_tasks: docker-certs.yml
   tags: [ mail ]
 
@@ -33,6 +30,7 @@
       - "{{ mail_persist_folder }}/mailstate:/var/mail-state"
       - "{{ mail_persist_folder }}/maillogs:/var/log/mail"
       - "{{ mail_persist_folder }}/certs:/etc/letsencrypt:ro"
+      - "{{ mail_persist_folder }}/amavis/custom-config.conf:/etc/amavis/conf.d/99-custom-override:ro"
     env:
       SSL_TYPE: letsencrypt
       TLS_LEVEL: modern
