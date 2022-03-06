@@ -24,7 +24,11 @@ mail_cert_image: certbot/certbot
 mail_cert_tag: latest
 
 # Size of DKIM key
-mail_dkim_size: 4096
+# Key sizes >=4096-bit could de denied by some mail-servers.
+# https://docker-mailserver.github.io/docker-mailserver/edge/config/best-practices/dkim/#configuration-using-a-web-interface
+#   According to https://tools.ietf.org/html/rfc6376 keys are preferably between 512 and 2048 bits.
+#   See issue https://github.com/docker-mailserver/docker-mailserver/issues/1854.
+mail_dkim_size: 2048
 
 # Amavis custom config
 # Can happen that client who want to send mail, eg. NAS box, phototrap, etc. is sending wrong headers

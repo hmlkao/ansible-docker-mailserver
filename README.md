@@ -40,7 +40,7 @@ Variables
 | `mail_persist_folder` | `/opt/mail` | (optional) Persistent folder for mail data, configuration, etc. on host
 | `mail_docker_image`   | `docker.io/mailserver/docker-mailserver` | (optional) Shouldn't be changed
 | `mail_docker_tag`     | `latest`    | (optional) Image Docker tag used to run mail server
-| `mail_dkim_size`      | `4096`      | (optional) DKIM key size (available values are 1024, 2048, 4096)
+| `mail_dkim_size`      | `2048`      | (optional) DKIM key size (available values are 1024, 2048, 4096)
 | `mail_amavis_config`  | `""`        | (optional) Configure Amavis overrides
 
 Mail account format
@@ -123,10 +123,14 @@ Suppose that your server host is `server1.example.com`
 1. Add TXT record with [DMARC](https://dmarc.org/) to your DNS
     What happen with mails which doesn't meet SPF and DKIM validation.
     ```
-    _DMARC IN     TXT     "v=DMARC1; p=quarantine; pct=5; rua=mailto:abuse+rua@example.com; ruf=mailto:abuse+ruf@example.com; fo=1"
+    _DMARC IN     TXT     "v=DMARC1; p=quarantine; pct=100; rua=mailto:abuse+rua@example.com; ruf=mailto:abuse+ruf@example.com; fo=1"
     ```
     - `ruf` - Reporting URI for forensic reports
     - `rua` - Reporting URI of aggregate reports
+    - Verify in commandline if is TXT applied
+      ```
+      dig mail._domainkey.example.com TXT
+      ```
 1. Configure reverse DNS for host public IP
     - Ask your provider to configure reverse DNS
     - You should get something similar (where `<1.2.3.4>` is your public server IP)
@@ -137,12 +141,12 @@ Suppose that your server host is `server1.example.com`
 
 Test your configuration
 =======================
-There is many tools to test your mail server, eg.:
-- https://dkimvalidator.com
+There are many tools to test your mail server, eg.:
+- [dkimvalidator.com](https://dkimvalidator.com)
   - Generate email address which you can use to verify your SPF/DKIM config
 - check-auth@verifier.port25.com
   - Just send mail to this mail address from your account mail and your will receive report back to your mail address
-- https://mxtoolbox.com
+- [mxtoolbox.com](https://mxtoolbox.com)
   - Test your SMTP configuration
   - Especially [Deliverability test](https://mxtoolbox.com/deliverability) is useful (test SPF and DKIM)
   - Just send mail to ping@tools.mxtoolbox.com from your account mail and your will receive report back to your mail address
@@ -153,6 +157,9 @@ There is many tools to test your mail server, eg.:
 - [Google Postmaster tools](https://toolbox.googleapps.com/apps/checkmx/)
   - Fill your `domain.tld` (eg. `example.com`) to the domain field
   - Fill `mail` to DKIM selector field
+  - **Doesn't work for me from unknown reason**
+- [Google Toolbox](https://toolbox.googleapps.com/)
+  - Mail troubleshooting
 - Test via [OpenSSL](https://docker-mailserver.github.io/docker-mailserver/edge/config/security/ssl/#testing-a-certificate-is-valid)
 
 More complex example
