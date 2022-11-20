@@ -229,7 +229,6 @@ There are many tools to test your mail server, eg.:
           - server1.example.com                 <-- my MX server
           - mail.example.com                    <-- pretty name for email clients
         mail_cert_email: my-mail@somewhere.com  <-- notification mail for Let's Encrypt
-        mail_persist_folder: /usr/local/mail    <-- path to folder on your host
     ```
 
 ## Client configuration
