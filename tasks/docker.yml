@@ -37,6 +37,8 @@
       ONE_DIR: "1"
       SPOOF_PROTECTION: "1"
       POSTMASTER_ADDRESS: "{{ mail_cert_email }}"
+      POSTFIX_MESSAGE_SIZE_LIMIT: "{{ postfix_message_size_limit }}"
+      ENABLE_OPENDMARC: "{{ enable_opendmarc }}"
       OVERRIDE_HOSTNAME: "{{ mail_domains.0 }}"
     published_ports:
       - "25:25"
