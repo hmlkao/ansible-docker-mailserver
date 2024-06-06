@@ -44,7 +44,7 @@
   template:
     dest: "{{ mail_persist_folder }}/amavis/custom-config.conf"
     src: amavis-custom-config.conf.j2
-    mode: 0600
+    mode: 0644
   notify: Restart mail service
 
 - name: Run docker container
