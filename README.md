@@ -344,3 +344,39 @@ docker logs mail-server
 ## Contributing
 
 All helping hands are appreciated. Check [CONTRIBUTING.md](https://github.com/hmlkao/ansible-docker-mailserver/blob/master/CONTRIBUTING.md)
+
+## Ansible Galaxy
+
+1. [Local setup](https://ansible.readthedocs.io/projects/galaxy-ng/en/latest/community/userguide/#ansible-core-cli-setup)
+
+    ```bash
+    $ cat ~/.ansible.cfg
+    [galaxy]
+    server_list = beta
+
+    [galaxy_server.beta]
+    url = https://beta-galaxy.ansible.com/api/
+    token = <token>
+    ```
+
+2. *(first use)* Create Ansible Galaxy metadata
+
+   - Creates folder `<namespace>.<collection>`
+
+    ```bash
+    ansible-galaxy collection init hmlkao.docker_mailserver
+    ```
+
+3. Build collection package
+
+    - Creates tarball with `tar.gz` extension
+
+    ```bash
+    ansible-galaxy collection build
+    ```
+
+4. Upload Collection
+
+    ```bash
+    ansible-galaxy collection publish ./hmlkao-docker_mailserver-<version>.tar.gz
+    ```
