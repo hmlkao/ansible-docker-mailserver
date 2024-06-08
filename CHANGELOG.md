@@ -1,11 +1,24 @@
+<!-- markdownlint-disable MD024 -->
 # Changelog
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [2.2.2] - 2024-06-08
+
+### Fixed
+
+- File permissions to support `docker-mailserver/docker-mailserver` v14
+
+## [2.2.1] - 2024-01-16
+
+### Added
+
+- Configurable environment vairables Postfix message size limit and enable opendmarc
 
 ## [2.2.0] - 2022-11-20
 
